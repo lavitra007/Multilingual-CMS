@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block body_class %}template-homepage{% endblock %}
+
+{% block extra_css %}
+{% comment %}
+Delete the line below if you're just getting started and want to remove the welcome screen!
+{% endcomment %}
+<link rel="stylesheet" href="{% static 'css/welcome_page.css' %}">
+{% endblock extra_css %}
+
+{% load wagtailcore_tags wagtailimages_tags i18n %}
+
+{% block content %}
+<div style="padding: 20px; font-family: sans-serif;">
+    <header
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px;">
+        <div>
+            {% if page.subtitle %}
+            <p style="font-size: 1.2em; color: #666; margin-top: -10px;">{{ page.subtitle }}</p>
+            {% endif %}
+        </div>
+        <div class="language-switcher">
+            <span>{% trans "Language:" %}</span>
+            {% get_available_languages as languages %}
+            {% get_language_info_list for languages as languages %}
+            {% for language in languages %}
+            {% if language.code == LANGUAGE_CODE %}
+            <strong>{{ language.name_local }}</strong>
+            {% else %}
+            <a href="/{{ language.code }}/" style="margin-left: 5px;">{{ language.name_local }}</a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </header>
+
+    {% if page.banner_image %}
+    <div style="margin-bottom: 20px;">
+        {% image page.banner_image fill-800x200 as banner %}
+        <img src="{{ banner.url }}" alt="{{ banner.alt }}" style="width: 100%; height: auto; border-radius: 8px;">
+    </div>
+    {% endif %}
+
+    <div class="stream-field">
+        {% for block in page.body %}
+        {% if block.block_type == 'heading' %}
+        <h2>{{ block.value }}</h2>
+        {% elif block.block_type == 'paragraph' %}
+        <div class="rich-text">{{ block.value|richtext }}</div>
+        {% elif block.block_type == 'image' %}
+        <div class="image-block" style="margin: 20px 0;">
+            {% image block.value width-800 as img %}
+            <img src="{{ img.url }}" alt="{{ img.alt }}" style="max-width: 100%; height: auto;">
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}
