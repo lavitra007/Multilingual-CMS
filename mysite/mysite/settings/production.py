@@ -11,15 +11,16 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 if not ALLOWED_HOSTS or ALLOWED_HOSTS == ['']:
     ALLOWED_HOSTS = ["*"]
 
-# Allow PythonAnywhere domains
+# Allow PythonAnywhere and Vercel domains
 ALLOWED_HOSTS.append('.pythonanywhere.com')
+ALLOWED_HOSTS.append('.vercel.app')
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # CSRF Settings
-CSRF_TRUSTED_ORIGINS = ['https://*.pythonanywhere.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.pythonanywhere.com', 'https://*.vercel.app']
 if RENDER_EXTERNAL_HOSTNAME:
     CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
